@@ -94,4 +94,4 @@ Phone 375px, tablet 768px and desktop 1280px, in light and dark mode, with the k
 
 ## How to run
 Open the folder in Visual Studio Code and use Live Server. Modules do not work when an HTML
-file is opened by double-clicking it.
+file is opened by double-clicking it
