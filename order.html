@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Shows the order in which synchronous code, Promise callbacks, queueMicrotask and setTimeout run.">
+    <meta name="author" content="Touseef Ahmed">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="js/pages/order.js"></script>
+    <title>Execution Order | Bloomrix</title>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+        <h1>Execution Order</h1>
+        <p>See the order in which synchronous code, Promise callbacks, <code>queueMicrotask</code> and <code>setTimeout</code> run. The order is recorded while the code runs and shown on the page.</p>
+
+        <nav class="site-nav" aria-label="Pages">
+            <ul>
+                <li><a href="index.html">Analytics</a></li>
+                <li><a href="performance.html">Performance</a></li>
+                <li><a href="order.html" aria-current="page">Execution order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="app" id="main-content" tabindex="-1">
+
+        <section class="panel" aria-labelledby="rules-title">
+            <h2 id="rules-title">The rules</h2>
+            <ol>
+                <li>The engine runs the current code to the end. This is synchronous code, and it runs on the call stack.</li>
+                <li>Then it runs every microtask: Promise callbacks and <code>queueMicrotask</code> callbacks, in the order they were queued. Microtasks created while microtasks run are also run now.</li>
+                <li>Then the browser may draw the page.</li>
+                <li>Then it takes one macrotask from the task queue, such as a timer callback, and starts again at step 1.</li>
+            </ol>
+        </section>
+
+        <section class="panel" aria-labelledby="demo-title">
+            <h2 id="demo-title">Run a scenario</h2>
+
+            <form class="filters" id="order-form">
+                <div class="field">
+                    <label for="scenario-select">Scenario</label>
+                    <select id="scenario-select" name="scenario"></select>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn" type="submit" id="run-scenario">Run the scenario</button>
+                </div>
+            </form>
+
+            <p id="scenario-description"></p>
+
+            <h3>Code that runs</h3>
+            <p class="hint">The code below is read from the function that runs, so it always matches what is recorded.</p>
+            <pre class="code-block"><code id="scenario-code"></code></pre>
+
+            <div class="compare">
+                <div>
+                    <h3>Expected order</h3>
+                    <ol class="order-list" id="expected-list"></ol>
+                </div>
+
+                <div>
+                    <h3>Recorded order</h3>
+                    <ol class="order-list" id="actual-list"></ol>
+                    <p class="hint" id="actual-empty">Nothing recorded yet. Run the scenario.</p>
+                </div>
+            </div>
+
+            <p class="message" id="verdict" role="status"></p>
+        </section>
+
+    </main>
+
+    <noscript>
+        <p class="alert">This page needs JavaScript to run the scenarios.</p>
+    </noscript>
+
+    <footer class="site-footer">
+        <p><small>&copy; 2026 Touseef Ahmed</small></p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Compares the speed of arrays, Maps and Sets for two common operations, measured with performance.now().">
+    <meta name="author" content="Touseef Ahmed">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="js/pages/performance.js"></script>
+    <title>Performance Comparison | Bloomrix</title>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+        <h1>Performance Comparison</h1>
+        <p>Two ways of doing the same job are timed with <code>performance.now()</code>. The records here are simple synthetic objects, and not the dashboard records.</p>
+
+        <nav class="site-nav" aria-label="Pages">
+            <ul>
+                <li><a href="index.html">Analytics</a></li>
+                <li><a href="performance.html" aria-current="page">Performance</a></li>
+                <li><a href="order.html">Execution order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="app" id="main-content" tabindex="-1">
+
+        <section class="panel" aria-labelledby="perf-title">
+            <h2 id="perf-title">Array, Map and Set compared</h2>
+
+            <ul>
+                <li><strong>Finding records by id:</strong> <code>Array.find</code> against <code>Map.get</code>, with the Map already built and with the time to build it included.</li>
+                <li><strong>Removing repeated values:</strong> <code>filter</code> with <code>indexOf</code> against a <code>Set</code>.</li>
+            </ul>
+
+            <form class="filters" id="perf-form">
+                <div class="field">
+                    <label for="size-select">Number of records</label>
+                    <select id="size-select" name="size"></select>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn" type="submit" id="run-button">Run the comparison</button>
+                </div>
+            </form>
+
+            <p class="message" id="perf-status" role="status"></p>
+        </section>
+
+        <section class="panel" aria-labelledby="results-title">
+            <h2 id="results-title">Results</h2>
+            <p class="hint" id="results-empty">No results yet. Run the comparison.</p>
+            <div id="lookup-result"></div>
+            <div id="duplicate-result"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="limits-title">
+            <h2 id="limits-title">How to read these numbers</h2>
+            <ul>
+                <li>Each approach runs several times, and the table shows the median. The first run is often slower, because the engine optimizes code while it runs.</li>
+                <li>Browsers can round the result of <code>performance.now()</code> to protect privacy, so a very fast operation can show as 0 or as a tiny number.</li>
+                <li>Other programs, a background tab and garbage collection change the numbers. Your numbers will differ from other computers, and from one run to the next.</li>
+                <li>The test uses simple synthetic records and only two kinds of operations, so it does not predict the speed of a real application.</li>
+                <li><code>Array.find</code> stops at the first match, so the average work depends on where the searched ids are.</li>
+                <li>A Map has a cost to build. It pays off when the same data is searched many times.</li>
+                <li>With a small number of records, the difference is too small to matter.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <noscript>
+        <p class="alert">This page needs JavaScript to run the comparison.</p>
+    </noscript>
+
+    <footer class="site-footer">
+        <p><small>&copy; 2026 Touseef Ahmed</small></p>
+    </footer>
+</body>
+
+</html>

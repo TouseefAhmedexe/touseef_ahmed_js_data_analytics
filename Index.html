@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Analytics dashboard for 120 sample records, built with Map, Set, iterators, generators and functional programming.">
+    <meta name="author" content="Touseef Ahmed">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="js/pages/dashboard.js"></script>
+    <title>Data Analytics Dashboard | Bloomrix</title>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+        <h1>Data Analytics Dashboard</h1>
+        <p>Search, group and summarize 120 sample work items. Every record on this page is sample data made by a fixed rule, and nothing is saved when you reload.</p>
+
+        <nav class="site-nav" aria-label="Pages">
+            <ul>
+                <li><a href="index.html" aria-current="page">Analytics</a></li>
+                <li><a href="performance.html">Performance</a></li>
+                <li><a href="order.html">Execution order</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="app" id="main-content" tabindex="-1">
+
+        <p class="alert" id="app-error" role="alert" hidden></p>
+
+        <section class="panel" aria-labelledby="data-title">
+            <h2 id="data-title">Dataset</h2>
+            <p id="data-summary"></p>
+
+            <details id="problem-details" hidden>
+                <summary id="problem-summary"></summary>
+                <ul id="problem-list"></ul>
+            </details>
+        </section>
+
+        <section class="panel" aria-labelledby="summary-title">
+            <h2 id="summary-title">Summary</h2>
+            <p class="hint" id="summary-note"></p>
+            <div class="stat-grid" id="summary-grid"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="filters-title">
+            <h2 id="filters-title">Search and filters</h2>
+
+            <form class="filters" id="filter-form" role="search">
+                <div class="field">
+                    <label for="search-input">Search</label>
+                    <input type="search" id="search-input" name="q" placeholder="Title, category, person, status or id" autocomplete="off">
+                </div>
+
+                <div class="field">
+                    <label for="category-select">Category</label>
+                    <select id="category-select" name="category"></select>
+                </div>
+
+                <div class="field">
+                    <label for="status-select">Status</label>
+                    <select id="status-select" name="status"></select>
+                </div>
+
+                <div class="field">
+                    <label for="priority-select">Priority</label>
+                    <select id="priority-select" name="priority"></select>
+                </div>
+
+                <div class="field">
+                    <label for="user-select">Assigned user</label>
+                    <select id="user-select" name="user"></select>
+                </div>
+
+                <div class="field">
+                    <label for="sort-select">Sort by</label>
+                    <select id="sort-select" name="sort"></select>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn btn--secondary" type="button" id="clear-filters">Clear filters</button>
+                </div>
+            </form>
+        </section>
+
+        <div class="columns">
+            <section class="panel" aria-labelledby="category-title">
+                <h2 id="category-title">Category statistics</h2>
+
+                <div class="table-wrap">
+                    <table class="data-table">
+                        <caption class="visually-hidden">Records, total value and average value for each category</caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Category</th>
+                                <th scope="col" class="num">Records</th>
+                                <th scope="col" class="num">Total value</th>
+                                <th scope="col" class="num">Average value</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="category-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel" aria-labelledby="status-title">
+                <h2 id="status-title">Status distribution</h2>
+                <ul class="bar-list" id="status-list"></ul>
+
+                <h3>Priority distribution</h3>
+                <ul class="bar-list" id="priority-list"></ul>
+
+                <h3>Workload by user</h3>
+                <ul class="bar-list" id="user-list"></ul>
+            </section>
+        </div>
+
+        <div class="records-layout">
+            <section class="panel records" aria-labelledby="records-title">
+                <h2 id="records-title" tabindex="-1">Records</h2>
+
+                <p class="result-count" id="result-count" role="status"></p>
+
+                <p class="empty" id="empty-state" hidden><span id="empty-text"></span> <button class="btn btn--small btn--secondary" type="button" id="empty-clear">Clear filters</button></p>
+
+                <div class="table-wrap" id="table-wrap">
+                    <table class="data-table">
+                        <caption class="visually-hidden">Records that match the filters</caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col" class="num">ID</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Assigned to</th>
+                                <th scope="col">Priority</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Date</th>
+                                <th scope="col" class="num">Value</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="record-body"></tbody>
+                    </table>
+                </div>
+
+                <nav aria-label="Record pages" id="pagination-nav" hidden>
+                    <ul class="pagination" id="pagination"></ul>
+                </nav>
+            </section>
+
+            <aside class="panel details" aria-labelledby="details-title">
+                <h2 id="details-title" tabindex="-1">Record details</h2>
+                <div id="details-content"></div>
+            </aside>
+        </div>
+
+        <section class="panel" aria-labelledby="tools-title">
+            <h2 id="tools-title">Data tools</h2>
+            <p class="hint">These tools change the current data in memory only. The original data is frozen and never changes, and reloading the page restores everything.</p>
+
+            <div class="tools-grid">
+                <form class="inline-form" id="dedupe-form">
+                    <div class="field">
+                        <label for="dedupe-property">Remove duplicates by</label>
+                        <select id="dedupe-property" name="property"></select>
+                    </div>
+
+                    <button class="btn" type="submit">Remove duplicates</button>
+                </form>
+
+                <div class="button-row">
+                    <button class="btn btn--secondary" type="button" id="reset-data">Reset to the original data</button>
+                </div>
+            </div>
+
+            <dl class="fact-list" id="data-facts"></dl>
+        </section>
+
+        <section class="panel" aria-labelledby="batch-title">
+            <h2 id="batch-title">Batch processing</h2>
+            <p>A generator hands out the current records 10 at a time. Each click asks it for one more batch, so the work happens step by step.</p>
+
+            <div class="button-row">
+                <button class="btn" type="button" id="next-batch">Process next batch</button>
+                <button class="btn btn--secondary" type="button" id="restart-batches">Start over</button>
+            </div>
+
+            <p class="message" id="batch-status" role="status"></p>
+
+            <div class="table-wrap">
+                <table class="data-table">
+                    <caption class="visually-hidden">Processed batches</caption>
+
+                    <thead>
+                        <tr>
+                            <th scope="col" class="num">Batch</th>
+                            <th scope="col">Records</th>
+                            <th scope="col" class="num">Count</th>
+                            <th scope="col" class="num">Value total</th>
+                            <th scope="col" class="num">Done</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="batch-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast-area" id="toast-area" role="status"></div>
+
+    <noscript>
+        <p class="alert">This page needs JavaScript to load and process the records.</p>
+    </noscript>
+
+    <footer class="site-footer">
+        <p><small>&copy; 2026 Touseef Ahmed</small></p>
+    </footer>
+</body>
+
+</html>
